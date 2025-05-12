@@ -22,10 +22,10 @@ export class CodeWriter {
   }
 
   writeArithmetic(command: string) {
-    const hackSupportedBinary = ["add", "and", "or", "sub"];
+    const arithmeticOps = ["add", "and", "or", "sub"];
     const comparisonCommands = ["lt", "gt", "eq"];
     let asm = [`// ${command}`];
-    if (hackSupportedBinary.includes(command)) {
+    if (arithmeticOps.includes(command)) {
       asm = asm.concat(ArithmeticCW.translate(command));
     } else if (comparisonCommands.includes(command)) {
       asm = asm.concat(ComparisonCW.translate(command as CompCommand));
@@ -133,37 +133,12 @@ export class CodeWriter {
     this.writeLine(asm);
   }
 
-  private loadStackValueInto(destination: "D" | "R13" | "R14" | "R15") {
-    return ["@SP", "AM=M-1", `D=M`, `@${destination}`, "M=D"];
-  }
-
-  private writeToStackFromDRegister() {
-    return ["@SP", "A=M", "M=D", "@SP", "M=M+1"];
-  }
-
   private neg() {
     return ["@SP", "A=M-1", "M=-M"];
   }
 
   private not() {
     return ["@SP", "A=M-1", "M=!M"];
-  }
-
-  private binaryOp(op: "+" | "-" | "&" | "|") {
-    return [
-      "@SP",
-      "AM=M-1",
-      "D=M",
-      "@SP",
-      "AM=M-1",
-      `M=D${op}M`,
-      "@SP",
-      "M=M+1",
-    ];
-  }
-
-  private sub() {
-    return ["@SP", "AM=M-1", "D=M", "@SP", "AM=M-1", `M=M-D`, "@SP", "M=M+1"];
   }
 
   public endProgram() {
