@@ -45,14 +45,56 @@ export class CodeWriter {
       case CommandType.C_PUSH:
         if (segment === VM_SEGMENTS.constant) {
           this.w_pushConstant(index);
+        } else if (segment === VM_SEGMENTS.pointer) {
+          this.w_pushPointer(
+            index === 0 ? RAM_SEGMENTS["this"] : RAM_SEGMENTS["that"]
+          );
         } else {
           this.w_pushSegment(RAM_SEGMENTS[segment], index);
         }
         break;
       case CommandType.C_POP:
-        this.w_popSegment(RAM_SEGMENTS[segment], index);
+        if (segment === VM_SEGMENTS.pointer) {
+          this.w_popPointer(
+            index === 0 ? RAM_SEGMENTS["this"] : RAM_SEGMENTS["that"]
+          );
+        } else {
+          this.w_popSegment(RAM_SEGMENTS[segment], index);
+        }
         break;
     }
+  }
+
+  // push stack value into this/that segment
+  private w_popPointer(segment: RAM_SEGMENTS.this | RAM_SEGMENTS.that) {
+    // pointer 0 - THIS
+    // pointer 1 - THAT
+    const asm = [
+      `// push pointer "${segment}"`,
+      `@SP`,
+      "AM=M-1",
+      "D=M",
+      `@${segment}`,
+      `M=D`,
+    ].join("\n");
+    this.writeLine(asm);
+  }
+
+  // push this/that segment onto the stack
+  private w_pushPointer(segment: RAM_SEGMENTS.this | RAM_SEGMENTS.that) {
+    // pointer 0 - THIS
+    // pointer 1 - THAT
+    const asm = [
+      `// pop pointer "${segment}"`,
+      `@${segment}`,
+      `D=M`,
+      `@SP`,
+      `A=M`,
+      `M=D`,
+      `@SP`,
+      `M=M+1`,
+    ].join("\n");
+    this.writeLine(asm);
   }
 
   private w_pushConstant(value: number) {
