@@ -11,10 +11,12 @@ import { ArithmeticCW } from "./ArithmeticCW";
 
 export class CodeWriter {
   private output: string;
-  constructor(outputFile: string) {
+  private symbolPrefix: string;
+  constructor(outputFile: string, symbolPrefix: string) {
     // empty file
     writeFileSync(outputFile, "");
     this.output = outputFile;
+    this.symbolPrefix = symbolPrefix;
   }
 
   writeLine(line: string) {
@@ -49,6 +51,8 @@ export class CodeWriter {
           this.w_pushPointer(
             index === 0 ? RAM_SEGMENTS["this"] : RAM_SEGMENTS["that"]
           );
+        } else if (segment === VM_SEGMENTS.static) {
+          this.w_pushStatic(index);
         } else {
           this.w_pushSegment(RAM_SEGMENTS[segment], index);
         }
@@ -58,11 +62,41 @@ export class CodeWriter {
           this.w_popPointer(
             index === 0 ? RAM_SEGMENTS["this"] : RAM_SEGMENTS["that"]
           );
+        } else if (segment === VM_SEGMENTS.static) {
+          this.w_popStatic(index);
         } else {
           this.w_popSegment(RAM_SEGMENTS[segment], index);
         }
         break;
     }
+  }
+
+  // pop the stack's value into static field
+  private w_popStatic(value: number) {
+    const asm = [
+      `// pop static ${value}`,
+      `@SP`,
+      "AM=M-1",
+      "D=M",
+      `@${this.symbolPrefix}.${value}`,
+      `M=D`,
+    ].join("\n");
+    this.writeLine(asm);
+  }
+
+  // push static value onto the stack
+  private w_pushStatic(value: number) {
+    const asm = [
+      `// push static ${value}`,
+      `@${this.symbolPrefix}.${value}`,
+      `D=M`,
+      `@SP`,
+      `A=M`,
+      `M=D`,
+      `@SP`,
+      `M=M+1`,
+    ].join("\n");
+    this.writeLine(asm);
   }
 
   // push stack value into this/that segment

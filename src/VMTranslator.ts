@@ -10,14 +10,15 @@ if (!filename) {
   process.exit(1);
 }
 
+const outputFilename = path.basename(filename, ".vm");
 const output = path.format({
   ext: ".asm",
-  name: path.basename(filename, ".vm"),
+  name: outputFilename,
   dir: path.dirname(filename),
 });
 
 const parser = new Parser(filename);
-const codeWriter = new CodeWriter(output);
+const codeWriter = new CodeWriter(output, outputFilename);
 
 while (parser.hasMoreLines()) {
   parser.advance();
