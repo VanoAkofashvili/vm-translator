@@ -11,7 +11,6 @@ if (!filename) {
     process.exit(1);
 }
 
-console.log(getOutputPath(filename));
 
 if (isDirectory(filename)) {
     const vmFilePaths = getVmFiles(filename)
@@ -72,6 +71,7 @@ function translateSingleVmFile(
         }
     }
 
+    // TODO: this should not be here
     // End program with an infinite loop
     codeWriter.endProgram();
 }
