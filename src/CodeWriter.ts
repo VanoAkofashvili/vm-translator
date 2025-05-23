@@ -5,6 +5,7 @@ the Hack platform
  */
 
 import { writeFileSync } from "fs";
+import path from "path";
 import { CommandType, RAM_SEGMENTS, VM_SEGMENTS } from "./constants";
 import { ComparisonCW, CompCommand } from "./ComparisonCW";
 import { ArithmeticCW } from "./ArithmeticCW";
@@ -12,12 +13,28 @@ import { ArithmeticCW } from "./ArithmeticCW";
 export class CodeWriter {
   private output: string;
   private symbolPrefix: string;
-  constructor(outputFile: string, symbolPrefix: string) {
-    // empty file
+  constructor(outputFile: string) {
+    // clear the file
     writeFileSync(outputFile, "");
     this.output = outputFile;
-    this.symbolPrefix = symbolPrefix;
+    this.setFileName(outputFile)
   }
+
+  // Set's the prefix for the static variables
+  public setFileName(outputPath: string) {
+    this.symbolPrefix = path.basename(outputPath, ".vm");
+  }
+
+  // /
+  private writeLabel(label: string) {}
+  private writeGoto(label: string) {}
+  private writeIf(label: string) {}
+
+  private writeFunction(functionName:string, nVars: number) {}
+  private writeCall(functionName:string, nArgs:number) {}
+  private writeReturn() {}
+
+  // /
 
   writeLine(line: string) {
     writeFileSync(this.output, line + "\n", { flag: "a" });
@@ -207,14 +224,6 @@ export class CodeWriter {
       `M=D`,
     ].join("\n");
     this.writeLine(asm);
-  }
-
-  private neg() {
-    return ["@SP", "A=M-1", "M=-M"];
-  }
-
-  private not() {
-    return ["@SP", "A=M-1", "M=!M"];
   }
 
   public endProgram() {
