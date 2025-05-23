@@ -12,20 +12,13 @@ const getVmFiles = (dirPath:string) => {
 }
 
 const getOutputPath = (inputVmFile: string) => {
-    // Generate output filename
-    const outputFilename = path.basename(inputVmFile, ".vm");
-
     // Generate the path
-    const outputPath = path.format({
+    return path.format({
         ext: ".asm",
-        name: outputFilename,
+        name: path.basename(inputVmFile, ".vm"),
         dir: path.dirname(inputVmFile),
     })
 
-    return {
-        outputFilename,
-        path: outputPath
-    }
 }
 
 

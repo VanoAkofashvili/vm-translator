@@ -26,6 +26,7 @@ export class Parser {
 
   public advance() {
     if (this.hasMoreLines()) {
+      // TODO: find the clever way to handle the inline comments
       this.currentCommand = this.srcLines[this.lineCounter].split(" ");
       this.lineCounter++;
     } else {

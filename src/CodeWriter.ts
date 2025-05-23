@@ -22,6 +22,7 @@ export class CodeWriter {
 
   // Set's the prefix for the static variables
   public setFileName(outputPath: string) {
+    this.log(`setFileName: ${outputPath}`)
     this.symbolPrefix = path.basename(outputPath, ".vm");
   }
 
@@ -228,6 +229,10 @@ export class CodeWriter {
 
   public endProgram() {
     this.writeLine(["(END)", "@END", "0;JMP"].join("\n"));
+  }
+
+  private log(log: string) {
+    this.writeLine('// ' + log)
   }
 
   close() {}

@@ -16,7 +16,7 @@ console.log(getOutputPath(filename));
 if (isDirectory(filename)) {
     const vmFilePaths = getVmFiles(filename)
 
-    const {path: outputPath} = getOutputPath(filename)
+    const outputPath = getOutputPath(filename)
 
     const codeWriter = new CodeWriter(outputPath)
 
@@ -30,7 +30,7 @@ if (isDirectory(filename)) {
     })
 
 } else {
-    const {path: outputPath} = getOutputPath(filename)
+    const outputPath = getOutputPath(filename)
     const parser = new Parser(filename)
     const codeWriter = new CodeWriter(outputPath )
     translateSingleVmFile({
@@ -51,9 +51,10 @@ function translateSingleVmFile(
 ) {
 
 
-
     while (parser.hasMoreLines()) {
         parser.advance();
+
+        console.log(parser.commandType())
         switch (parser.commandType()) {
             case CommandType.C_POP:
             case CommandType.C_PUSH: {
