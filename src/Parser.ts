@@ -26,8 +26,9 @@ export class Parser {
 
   public advance() {
     if (this.hasMoreLines()) {
-      // TODO: find the clever way to handle the inline comments
-      this.currentCommand = this.srcLines[this.lineCounter].split(" ");
+      const line = this.srcLines[this.lineCounter]
+      const sanitized = line.split('//')[0].trim();
+      this.currentCommand = sanitized.split(" ")
       this.lineCounter++;
     } else {
       console.log("EOF");
