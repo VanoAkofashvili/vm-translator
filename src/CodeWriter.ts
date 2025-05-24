@@ -44,7 +44,7 @@ export class CodeWriter {
     public writeIf(label: string) {
         const asm = this.getTopValue().concat([
             `@${label}`,
-            `D;JLT`
+            `D;JNE`
         ]).join("\n")
 
         this.writeLine(asm)

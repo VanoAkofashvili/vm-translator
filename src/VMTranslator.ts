@@ -74,6 +74,10 @@ function translateSingleVmFile(
                 codeWriter.writeIf(parser.arg1());
                 break;
             }
+            case CommandType.C_GOTO: {
+               codeWriter.writeGoto(parser.arg1());
+               break;
+            }
         }
     }
 
