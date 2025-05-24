@@ -53,6 +53,8 @@ export class Parser {
         return CommandType.C_ARITHMETIC;
       case 'label':
         return CommandType.C_LABEL
+      case 'if-goto':
+        return CommandType.C_IF
     }
   }
 

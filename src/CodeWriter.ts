@@ -30,12 +30,26 @@ export class CodeWriter {
   public writeLabel(label: string) {
     this.writeLine(`(${label})`)
   }
-  private writeGoto(label: string) {}
-  private writeIf(label: string) {}
+  public writeGoto(label: string) {
+     const asm = [
+        `@${label}`,
+         '0;JMP'
+     ].join('\n')
 
-  private writeFunction(functionName:string, nVars: number) {}
-  private writeCall(functionName:string, nArgs:number) {}
-  private writeReturn() {}
+      this.writeLabel(asm)
+  }
+  public writeIf(label: string) {
+      const asm = this.getTopValue().concat([
+        `@${label}`,
+        `D;JLT`
+        ]).join("\n")
+
+      this.writeLine(asm)
+  }
+
+  public writeFunction(functionName:string, nVars: number) {}
+  public writeCall(functionName:string, nArgs:number) {}
+  public writeReturn() {}
 
   // /
 
@@ -89,6 +103,14 @@ export class CodeWriter {
         }
         break;
     }
+  }
+
+  private getTopValue() {
+    return [
+      `@SP`,
+      "AM=M-1",
+      "D=M",
+    ]
   }
 
   // pop the stack's value into static field

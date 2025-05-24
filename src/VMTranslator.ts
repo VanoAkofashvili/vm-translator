@@ -68,6 +68,11 @@ function translateSingleVmFile(
             }
             case CommandType.C_LABEL: {
                 codeWriter.writeLabel(parser.arg1());
+                break;
+            }
+            case CommandType.C_IF: {
+                codeWriter.writeIf(parser.arg1());
+                break;
             }
         }
     }
