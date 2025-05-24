@@ -83,7 +83,7 @@ function translateSingleVmFile(
 
     // TODO: this should not be here
     // End program with an infinite loop
-    codeWriter.endProgram();
+    // codeWriter.endProgram();
 }
 
 

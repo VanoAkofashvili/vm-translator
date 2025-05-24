@@ -38,7 +38,7 @@ export class CodeWriter {
             '0;JMP'
         ].join('\n')
 
-        this.writeLabel(asm)
+        this.writeLine(asm)
     }
 
     public writeIf(label: string) {
@@ -154,7 +154,7 @@ export class CodeWriter {
         // pointer 0 - THIS
         // pointer 1 - THAT
         const asm = [
-            `// push pointer "${segment}"`,
+            `// pop pointer "${segment}"`,
             `@SP`,
             "AM=M-1",
             "D=M",
@@ -169,7 +169,7 @@ export class CodeWriter {
         // pointer 0 - THIS
         // pointer 1 - THAT
         const asm = [
-            `// pop pointer "${segment}"`,
+            `// push pointer "${segment}"`,
             `@${segment}`,
             `D=M`,
             `@SP`,

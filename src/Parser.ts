@@ -13,7 +13,8 @@ export class Parser {
   constructor(filename: string) {
     const srcCode = readFileSync(filename, "utf-8");
     srcCode.split("\n").forEach((line) => {
-      if (!line || line.startsWith("//")) return;
+      if (!line || line.trim().startsWith("//")) return;
+      console.log('widget::line ', line)
 
       this.srcLines.push(line);
     });
@@ -35,7 +36,6 @@ export class Parser {
   }
 
   public commandType(): CommandType {
-    console.log('widget::', this.currentCommand.at(0))
     switch (this.currentCommand.at(0)) {
       case "push":
         return CommandType.C_PUSH;
@@ -55,6 +55,10 @@ export class Parser {
         return CommandType.C_LABEL
       case 'if-goto':
         return CommandType.C_IF
+      case 'goto':
+        return CommandType.C_GOTO
+      default:
+        throw new Error('Not implemented');
     }
   }
 
