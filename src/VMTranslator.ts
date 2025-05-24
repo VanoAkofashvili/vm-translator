@@ -1,4 +1,3 @@
-import path from "path";
 import {CodeWriter} from "./CodeWriter";
 import {CommandType} from "./constants";
 import {Parser} from "./Parser";
@@ -53,7 +52,6 @@ function translateSingleVmFile(
     while (parser.hasMoreLines()) {
         parser.advance();
 
-        console.log(parser.commandType())
         switch (parser.commandType()) {
             case CommandType.C_POP:
             case CommandType.C_PUSH: {
@@ -67,6 +65,9 @@ function translateSingleVmFile(
             case CommandType.C_ARITHMETIC: {
                 codeWriter.writeArithmetic(parser.arg1());
                 break;
+            }
+            case CommandType.C_LABEL: {
+                codeWriter.writeLabel(parser.arg1());
             }
         }
     }

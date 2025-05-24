@@ -2,9 +2,8 @@
 The Parser’s job is to make sense out of each VM command
 */
 
-import { readFileSync } from "fs";
-import { InvalidMethodCall } from "./errors/InvalidMethodCall";
-import { CommandType } from "./constants";
+import {readFileSync} from "fs";
+import {CommandType} from "./constants";
 
 export class Parser {
   private currentCommand: string[] | null = null;
@@ -36,6 +35,7 @@ export class Parser {
   }
 
   public commandType(): CommandType {
+    console.log('widget::', this.currentCommand.at(0))
     switch (this.currentCommand.at(0)) {
       case "push":
         return CommandType.C_PUSH;
@@ -51,6 +51,8 @@ export class Parser {
       case "or":
       case "not":
         return CommandType.C_ARITHMETIC;
+      case 'label':
+        return CommandType.C_LABEL
     }
   }
 

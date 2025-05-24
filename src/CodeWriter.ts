@@ -27,7 +27,9 @@ export class CodeWriter {
   }
 
   // /
-  private writeLabel(label: string) {}
+  public writeLabel(label: string) {
+    this.writeLine(`(${label})`)
+  }
   private writeGoto(label: string) {}
   private writeIf(label: string) {}
 
