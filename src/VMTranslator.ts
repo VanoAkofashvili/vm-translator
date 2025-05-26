@@ -30,7 +30,7 @@ if (isDirectory(filename)) {
 } else {
     const outputPath = getOutputPath(filename)
     const parser = new Parser(filename)
-    const codeWriter = new CodeWriter(outputPath )
+    const codeWriter = new CodeWriter(outputPath)
     translateSingleVmFile({
         parser,
         codeWriter
@@ -75,9 +75,12 @@ function translateSingleVmFile(
                 break;
             }
             case CommandType.C_GOTO: {
-               codeWriter.writeGoto(parser.arg1());
-               break;
+                codeWriter.writeGoto(parser.arg1());
+                break;
             }
+            case CommandType.C_FUNCTION:
+                codeWriter.writeFunction(parser.arg1(), parser.arg2());
+                break
         }
     }
 

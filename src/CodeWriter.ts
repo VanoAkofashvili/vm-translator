@@ -51,6 +51,13 @@ export class CodeWriter {
     }
 
     public writeFunction(functionName: string, nVars: number) {
+        // Create function label
+        this.writeLabel(functionName)
+
+        // initialize local variables(n) to 0
+        for (let i = 0; i < nVars; i++) {
+           this.writePushPop(CommandType.C_PUSH, VM_SEGMENTS.local, 0)
+        }
     }
 
     public writeCall(functionName: string, nArgs: number) {

@@ -57,8 +57,10 @@ export class Parser {
         return CommandType.C_IF
       case 'goto':
         return CommandType.C_GOTO
+      case 'function':
+        return CommandType.C_FUNCTION
       default:
-        throw new Error('Not implemented');
+        throw new Error('Not implemented')
     }
   }
 
