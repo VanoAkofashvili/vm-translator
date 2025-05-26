@@ -81,6 +81,9 @@ function translateSingleVmFile(
             case CommandType.C_FUNCTION:
                 codeWriter.writeFunction(parser.arg1(), parser.arg2());
                 break
+            case CommandType.C_RETURN:
+                codeWriter.writeReturn()
+                break
         }
     }
 

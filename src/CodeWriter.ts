@@ -64,6 +64,72 @@ export class CodeWriter {
     }
 
     public writeReturn() {
+        const asm = [
+            '// return',
+            // save LCL into local variable
+            '@LCL',
+            'D=M',
+            '@frame',
+            'M=D',
+            // save return address in temp variable
+            '@frame',
+            'D=M',
+            '@5',
+            'A=D-A',
+            'D=M',
+            '@retAddr',
+            'M=D',
+            // reposition the return value of the caller - *ARG = pop()
+        ].concat(this.getTopValue()).concat([
+            // D includes the stack value
+            '@ARG',
+            'A=M',
+            'M=D',
+            // SP=ARG+1
+            '@ARG',
+            'D=M',
+            '@1',
+            'D=D+1',
+            '@SP',
+            'M=D',
+            // THAT = *(frame - 1)
+            '@frame',
+            'D=M',
+            '@1',
+            'A=D-A',
+            'D=M',
+            '@THAT',
+            'M=D',
+            // THIS = *(frame - 2)
+            '@frame',
+            'D=M',
+            '@2',
+            'A=D-A',
+            'D=M',
+            '@THIS',
+            'M=D',
+            // ARG = *(frame - 3)
+            '@frame',
+            'D=M',
+            '@3',
+            'A=D-A',
+            'D=M',
+            '@ARG',
+            'M=D',
+            // LCL = *(frame - 4)
+            '@frame',
+            'D=M',
+            '@4',
+            'A=D-A',
+            'D=M',
+            '@LCL',
+            'M=D',
+            // goto retAddr
+            '@retAddr',
+            'A=M',
+            '0;JMP'
+        ]).join('\n')
+        this.writeLine(asm)
     }
 
     // /
@@ -264,6 +330,14 @@ export class CodeWriter {
             `M=D`,
         ].join("\n");
         this.writeLine(asm);
+    }
+
+    private neg() {
+        return ["@SP", "A=M-1", "M=-M"];
+    }
+
+    private not() {
+        return ["@SP", "A=M-1", "M=!M"];
     }
 
     public endProgram() {

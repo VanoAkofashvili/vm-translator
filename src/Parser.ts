@@ -59,6 +59,8 @@ export class Parser {
         return CommandType.C_GOTO
       case 'function':
         return CommandType.C_FUNCTION
+      case 'return':
+        return CommandType.C_RETURN
       default:
         throw new Error('Not implemented')
     }
