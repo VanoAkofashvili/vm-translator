@@ -62,6 +62,8 @@ export class Parser {
         return CommandType.C_FUNCTION
       case 'return':
         return CommandType.C_RETURN
+      case 'call':
+        return CommandType.C_CALL
       default:
         throw new Error(`Not implemented ${currentCommand}`)
     }

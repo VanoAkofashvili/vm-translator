@@ -61,6 +61,70 @@ export class CodeWriter {
     }
 
     public writeCall(functionName: string, nArgs: number) {
+        const asm = [
+            `// call ${functionName} ${nArgs}`,
+            // push returnAddress onto the stack
+            '@RETURN_ADDRESS',
+            'D=A',
+            '@SP',
+            'A=M',
+            'M=D',
+            '@SP',
+            'M=M+1',
+            // save LCL
+            '@LCL',
+            'D=M',
+            '@SP',
+            'A=M',
+            'M=D',
+            '@SP',
+            'M=M+1',
+            // save ARG
+            '@ARG',
+            'D=M',
+            '@SP',
+            'A=M',
+            'M=D',
+            '@SP',
+            'M=M+1',
+            // save THIS
+            '@THIS',
+            'D=M',
+            '@SP',
+            'A=M',
+            'M=D',
+            '@SP',
+            'M=M+1',
+            // save THAT
+            '@THAT',
+            'D=M',
+            '@SP',
+            'A=M',
+            'M=D',
+            '@SP',
+            'M=M+1',
+            // ARG = SP - 5 - nArgs
+            '@SP',
+            'D=M',
+            '@5',
+            'D=D-A',
+            `@${nArgs}`,
+            'D=D-A',
+            '@ARG',
+            'M=D',
+            // LCL = SP
+            '@SP',
+            'D=M',
+            '@LCL',
+            'M=D',
+            // goto functionName
+            `@${functionName}`,
+            '0;JMP',
+            // inject returnAddress label
+            '(RETURN_ADDRESS)',
+        ].join('\n')
+
+        this.writeLine(asm)
     }
 
     public writeReturn() {
