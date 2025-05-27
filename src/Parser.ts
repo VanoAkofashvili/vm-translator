@@ -36,7 +36,8 @@ export class Parser {
   }
 
   public commandType(): CommandType {
-    switch (this.currentCommand.at(0)) {
+    const currentCommand = this.currentCommand.at(0)
+    switch (currentCommand) {
       case "push":
         return CommandType.C_PUSH;
       case "pop":
@@ -62,7 +63,7 @@ export class Parser {
       case 'return':
         return CommandType.C_RETURN
       default:
-        throw new Error('Not implemented')
+        throw new Error(`Not implemented ${currentCommand}`)
     }
   }
 
