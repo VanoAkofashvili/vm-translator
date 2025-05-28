@@ -13,18 +13,33 @@ import {CommandType, RAM_SEGMENTS, VM_SEGMENTS} from "./constants";
 export class CodeWriter {
     private output: string;
     private symbolPrefix: string;
+    private returnCounters: Map<string, number> = new Map()
 
     constructor(outputFile: string) {
         // clear the file
         writeFileSync(outputFile, "");
         this.output = outputFile;
         this.setFileName(outputFile)
+        // this.bootstrap()
     }
 
     // Set's the prefix for the static variables
     public setFileName(outputPath: string) {
         this.log(`setFileName: ${outputPath}`)
         this.symbolPrefix = path.basename(outputPath, ".vm");
+    }
+
+    private bootstrap() {
+        const asm = [
+            '// bootstrap',
+            '@256',
+            'D=A',
+            '@SP',
+            'M=D',
+        ].join("\n")
+        this.writeCall('Sys.init', 0)
+
+        this.writeLine(asm)
     }
 
     // /
@@ -56,15 +71,26 @@ export class CodeWriter {
 
         // initialize local variables(n) to 0
         for (let i = 0; i < nVars; i++) {
-           this.writePushPop(CommandType.C_PUSH, VM_SEGMENTS.local, 0)
+           // this.writePushPop(CommandType.C_PUSH, VM_SEGMENTS.local, i)
+            this.writeLine(
+                ["@SP", "A=M", "M=0", "@SP", "M=M+1"].join('\n')
+            )
         }
     }
 
     public writeCall(functionName: string, nArgs: number) {
+        let i = this.returnCounters.get(functionName)
+
+        if (i === undefined) {
+            i = 0
+            this.returnCounters.set(functionName, i)
+        }
+
+        const returnAddress = `${functionName}$ret.${i}`
         const asm = [
             `// call ${functionName} ${nArgs}`,
             // push returnAddress onto the stack
-            '@RETURN_ADDRESS',
+            `@${returnAddress}`,
             'D=A',
             '@SP',
             'A=M',
@@ -121,10 +147,11 @@ export class CodeWriter {
             `@${functionName}`,
             '0;JMP',
             // inject returnAddress label
-            '(RETURN_ADDRESS)',
+            `(${returnAddress})`
         ].join('\n')
 
         this.writeLine(asm)
+        this.returnCounters.set(functionName, i + 1)
     }
 
     public writeReturn() {

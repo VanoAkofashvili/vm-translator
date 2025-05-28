@@ -14,8 +14,6 @@ export class Parser {
     const srcCode = readFileSync(filename, "utf-8");
     srcCode.split("\n").forEach((line) => {
       if (!line || line.trim().startsWith("//")) return;
-      console.log('widget::line ', line)
-
       this.srcLines.push(line);
     });
   }
