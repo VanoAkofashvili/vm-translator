@@ -20,7 +20,7 @@ export class CodeWriter {
         writeFileSync(outputFile, "");
         this.output = outputFile;
         this.setFileName(outputFile)
-        // this.bootstrap()
+        this.bootstrap()
     }
 
     // Set's the prefix for the static variables
@@ -37,9 +37,8 @@ export class CodeWriter {
             '@SP',
             'M=D',
         ].join("\n")
-        this.writeCall('Sys.init', 0)
-
         this.writeLine(asm)
+        this.writeCall('Sys.init', 0)
     }
 
     // /
